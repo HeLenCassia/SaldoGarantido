@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SALDO GARANTIDO</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    background:#eef2f7;
+    color:#1e293b;
+    padding:30px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:35p
+    x;
+}
+
+.logo h1{
+    font-size:48px;
+    color:#034d13;
+    font-weight:700;
+    letter-spacing:2px;
+}
+
+.logo p{
+    color:#64748b;
+    margin-top:8px;
+    font-size:16px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.06);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+}
+
+.card h3{
+    color:#64748b;
+    font-size:15px;
+    margin-bottom:12px;
+    font-weight:500;
+}
+
+.card p{
+    font-size:30px;
+    font-weight:bold;
+}
+
+.receita{
+    color:#16a34a;
+}
+
+.despesa{
+    color:#dc2626;
+}
+
+.saldo{
+    color:#2563eb;
+}
+
+.form-area{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.06);
+    margin-bottom:35px;
+}
+
+.form-title{
+    font-size:22px;
+    margin-bottom:20px;
+    color:#1e293b;
+    font-weight:600;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
+
+input, select{
+    width:100%;
+    padding:14px;
+    border:1px solid #cbd5e1;
+    border-radius:12px;
+    font-size:14px;
+    transition:0.2s;
+}
+
+input:focus,
+select:focus{
+    outline:none;
+    border-color:#2563eb;
+}
+
+button{
+    border:none;
+    padding:14px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.2s;
+}
+
+.btn-salvar{
+    background:#2563eb;
+    color:white;
+}
+
+.btn-salvar:hover{
+    background:#1d4ed8;
+}
+
+.erro{
+    color:#dc2626;
+    margin-top:12px;
+    font-size:14px;
+}
+
+.section-title{
+    margin:35px 0 18px;
+    font-size:24px;
+    font-weight:600;
+}
+
+.section-receita{
+    color:#16a34a;
+}
+
+.section-despesa{
+    color:#dc2626;
+}
+
+.lista{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.item{
+    background:white;
+    padding:18px;
+    border-radius:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.item.receita-item{
+    border-left:6px solid #16a34a;
+}
+
+.item.despesa-item{
+    border-left:6px solid #dc2626;
+}
+
+.info{
+    flex:1;
+}
+
+.info strong{
+    display:block;
+    font-size:17px;
+    margin-bottom:6px;
+}
+
+.info span{
+    color:#64748b;
+    font-size:14px;
+}
+
+.valor-receita{
+    color:#16a34a;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.valor-despesa{
+    color:#dc2626;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.acoes{
+    display:flex;
+    gap:10px;
+}
+
+.btn-editar{
+    background:#f59e0b;
+    color:white;
+}
+
+.btn-excluir{
+    background:#dc2626;
+    color:white;
+}
+
+.btn-editar:hover{
+    background:#d97706;
+}
+
+.btn-excluir:hover{
+    background:#b91c1c;
+}
+
+.vazio{
+    background:white;
+    padding:22px;
+    border-radius:14px;
+    color:#64748b;
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.chart-container{
+    margin-top:35px;
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.06);
+}
+
+@media(max-width:768px){
+
+    body{
+        padding:15px;
+    }
+
+    .logo h1{
+        font-size:38px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        <h1>SALDO GARANTIDO</h1>
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Renda Total</h3>
+            <p class="receita" id="rendaTotal">R$ 0,00</p>
+        </div>
+
+        <div class="card">
+            <h3>Total de Gastos</h3>
+            <p class="despesa" id="gastoTotal">R$ 0,00</p>
+        </div>
+
+        <div class="card">
+            <h3>Saldo Final</h3>
+            <p class="saldo" id="saldoFinal">R$ 0,00</p>
+        </div>
+
+        <div class="card">
+            <h3>Gastos no Mês</h3>
+            <p class="despesa" id="gastoMes">R$ 0,00</p>
+        </div>
+
+    </div>
+
+    <div class="form-area">
+
+        <div class="form-title">
+            Nova Transação
+        </div>
+
+        <div class="form-grid">
+
+            <input type="text" id="descricao" placeholder="Descrição">
+
+            <input type="number" id="valor" placeholder="Valor">
+
+            <input type="date" id="data">
+
+            <select id="tipo">
+                <option value="Receita">Receita</option>
+                <option value="Despesa">Despesa</option>
+            </select>
+
+            <button class="btn-salvar" onclick="salvarTransacao()">
+                Salvar
+            </button>
+
+        </div>
+
+        <div class="erro" id="erro"></div>
+
+    </div>
+
+    <h2 class="section-title section-receita">
+        Receitas
+    </h2>
+
+    <div id="listaReceitas" class="lista"></div>
+
+    <h2 class="section-title section-despesa">
+        Despesas
+    </h2>
+
+    <div id="listaDespesas" class="lista"></div>
+
+    <div class="chart-container">
+        <canvas id="grafico"></canvas>
+    </div>
+
+</div>
+
+<script>
+
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let editando = null;
+
+function formatar(valor){
+    return valor.toLocaleString("pt-BR",{
+        style:"currency",
+        currency:"BRL"
+    });
+}
+
+function salvarLocal(){
+    localStorage.setItem("transacoes", JSON.stringify(transacoes));
+}
+
+function limparCampos(){
+    document.getElementById("descricao").value = "";
+    document.getElementById("valor").value = "";
+    document.getElementById("data").value = "";
+    document.getElementById("tipo").value = "Receita";
+}
+
+function salvarTransacao(){
+
+    const descricao = document.getElementById("descricao").value.trim();
+    const valor = parseFloat(document.getElementById("valor").value);
+    const data = document.getElementById("data").value;
+    const tipo = document.getElementById("tipo").value;
+
+    const erro = document.getElementById("erro");
+
+    erro.innerText = "";
+
+    if(descricao === ""){
+        erro.innerText = "Digite uma descrição.";
+        return;
+    }
+
+    if(!valor || valor <= 0){
+        erro.innerText = "Digite um valor válido.";
+        return;
+    }
+
+    if(data === ""){
+        erro.innerText = "Selecione uma data.";
+        return;
+    }
+
+    const transacao = {
+        id: editando || Date.now(),
+        descricao,
+        valor,
+        data,
+        tipo
+    };
+
+    if(editando){
+        const index = transacoes.findIndex(t => t.id === editando);
+        transacoes[index] = transacao;
+        editando = null;
+    } else {
+        transacoes.push(transacao);
+    }
+
+    salvarLocal();
+    limparCampos();
+    renderizar();
+}
+
+function editar(id){
+
+    const t = transacoes.find(x => x.id === id);
+
+    document.getElementById("descricao").value = t.descricao;
+    document.getElementById("valor").value = t.valor;
+    document.getElementById("data").value = t.data;
+    document.getElementById("tipo").value = t.tipo;
+
+    editando = id;
+}
+
+function excluir(id){
+
+    transacoes = transacoes.filter(t => t.id !== id);
+
+    salvarLocal();
+    renderizar();
+}
+
+function renderizar(){
+
+    const listaReceitas = document.getElementById("listaReceitas");
+    const listaDespesas = document.getElementById("listaDespesas");
+
+    listaReceitas.innerHTML = "";
+    listaDespesas.innerHTML = "";
+
+    let renda = 0;
+    let gastos = 0;
+    let gastosMes = 0;
+
+    const hoje = new Date();
+    const mesAtual = hoje.getMonth();
+    const anoAtual = hoje.getFullYear();
+
+    transacoes.forEach(t => {
+
+        if(t.tipo === "Receita"){
+            renda += t.valor;
+        } else {
+            gastos += t.valor;
+
+            const dataTransacao = new Date(t.data);
+
+            if(
+                dataTransacao.getMonth() === mesAtual &&
+                dataTransacao.getFullYear() === anoAtual
+            ){
+                gastosMes += t.valor;
+            }
+        }
+
+        const html = `
+            <div class="item ${t.tipo === 'Receita' ? 'receita-item' : 'despesa-item'}">
+
+                <div class="info">
+                    <strong>${t.descricao}</strong>
+
+                    <span>
+                        ${new Date(t.data).toLocaleDateString("pt-BR")}
+                    </span>
+                </div>
+
+                <div class="${t.tipo === 'Receita' ? 'valor-receita' : 'valor-despesa'}">
+                    ${t.tipo === 'Receita' ? '+' : '-'}
+                    ${formatar(t.valor)}
+                </div>
+
+                <div class="acoes">
+
+                    <button class="btn-editar" onclick="editar(${t.id})">
+                        Editar
+                    </button>
+
+                    <button class="btn-excluir" onclick="excluir(${t.id})">
+                        Excluir
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+        if(t.tipo === "Receita"){
+            listaReceitas.innerHTML += html;
+        } else {
+            listaDespesas.innerHTML += html;
+        }
+
+    });
+
+    if(listaReceitas.innerHTML === ""){
+        listaReceitas.innerHTML = `
+            <div class="vazio">
+                Nenhuma receita cadastrada.
+            </div>
+        `;
+    }
+
+    if(listaDespesas.innerHTML === ""){
+        listaDespesas.innerHTML = `
+            <div class="vazio">
+                Nenhuma despesa cadastrada.
+            </div>
+        `;
+    }
+
+    const saldo = renda - gastos;
+
+    document.getElementById("rendaTotal").innerText = formatar(renda);
+    document.getElementById("gastoTotal").innerText = formatar(gastos);
+    document.getElementById("saldoFinal").innerText = formatar(saldo);
+    document.getElementById("gastoMes").innerText = formatar(gastosMes);
+
+    atualizarGrafico(renda, gastos);
+}
+
+let grafico = null;
+
+function atualizarGrafico(receitas, despesas){
+
+    const ctx = document.getElementById("grafico");
+
+    if(grafico){
+        grafico.destroy();
+    }
+
+    grafico = new Chart(ctx, {
+        type:"bar",
+        data:{
+            labels:["Receitas", "Despesas"],
+            datasets:[{
+                label:"Valores",
+                data:[receitas, despesas],
+                backgroundColor:[
+                    "#16a34a",
+                    "#dc2626"
+                ],
+                borderRadius:8
+            }]
+        },
+        options:{
+            responsive:true,
+            plugins:{
+                legend:{
+                    display:false
+                }
+            }
+        }
+    });
+}
+
+renderizar();
+
+</script>
+
+</body>
+</html>
