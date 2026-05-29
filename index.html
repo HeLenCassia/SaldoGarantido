@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>SALDO GARANTIDO</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,18 +21,87 @@
 body{
     background:#eef2f7;
     color:#1e293b;
-    padding:30px;
 }
+
+/* LOGIN */
+
+.auth-container{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.auth-box{
+    width:100%;
+    max-width:420px;
+    background:white;
+    padding:35px;
+    border-radius:22px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.auth-box h2{
+    text-align:center;
+    color:#1e293b;
+}
+
+.auth-box input{
+    padding:15px;
+    border-radius:12px;
+    border:1px solid #cbd5e1;
+    font-size:15px;
+}
+
+.auth-box button{
+    background:#2563eb;
+    color:white;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.auth-box button:hover{
+    background:#1d4ed8;
+}
+
+.trocar-tela{
+    text-align:center;
+    font-size:14px;
+    color:#64748b;
+}
+
+.trocar-tela span{
+    color:#2563eb;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.erro{
+    color:#dc2626;
+    font-size:14px;
+    text-align:center;
+}
+
+/* SISTEMA */
 
 .container{
     max-width:1200px;
     margin:auto;
+    padding:30px;
 }
 
 .logo{
     text-align:center;
-    margin-bottom:35p
-    x;
+    margin-bottom:35px;
 }
 
 .logo h1{
@@ -58,18 +129,12 @@ body{
     padding:25px;
     border-radius:18px;
     box-shadow:0 4px 15px rgba(0,0,0,0.06);
-    transition:0.3s;
-}
-
-.card:hover{
-    transform:translateY(-4px);
 }
 
 .card h3{
     color:#64748b;
     font-size:15px;
     margin-bottom:12px;
-    font-weight:500;
 }
 
 .card p{
@@ -100,8 +165,6 @@ body{
 .form-title{
     font-size:22px;
     margin-bottom:20px;
-    color:#1e293b;
-    font-weight:600;
 }
 
 .form-grid{
@@ -116,13 +179,6 @@ input, select{
     border:1px solid #cbd5e1;
     border-radius:12px;
     font-size:14px;
-    transition:0.2s;
-}
-
-input:focus,
-select:focus{
-    outline:none;
-    border-color:#2563eb;
 }
 
 button{
@@ -131,7 +187,6 @@ button{
     border-radius:12px;
     cursor:pointer;
     font-weight:600;
-    transition:0.2s;
 }
 
 .btn-salvar{
@@ -141,12 +196,6 @@ button{
 
 .btn-salvar:hover{
     background:#1d4ed8;
-}
-
-.erro{
-    color:#dc2626;
-    margin-top:12px;
-    font-size:14px;
 }
 
 .section-title{
@@ -231,14 +280,6 @@ button{
     color:white;
 }
 
-.btn-editar:hover{
-    background:#d97706;
-}
-
-.btn-excluir:hover{
-    background:#b91c1c;
-}
-
 .vazio{
     background:white;
     padding:22px;
@@ -255,9 +296,20 @@ button{
     box-shadow:0 4px 15px rgba(0,0,0,0.06);
 }
 
+.logout{
+    margin-bottom:20px;
+    display:flex;
+    justify-content:flex-end;
+}
+
+.logout button{
+    background:#dc2626;
+    color:white;
+}
+
 @media(max-width:768px){
 
-    body{
+    .container{
         padding:15px;
     }
 
@@ -268,14 +320,87 @@ button{
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="container">
+<!-- LOGIN -->
+
+<div class="auth-container" id="authContainer">
 
     <div class="logo">
         <h1>SALDO GARANTIDO</h1>
+        <p>Controle mensal financeiro pessoal inteligente</p>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="auth-box" id="loginBox">
+
+        <h2>Entrar</h2>
+
+        <input type="email" id="loginEmail" placeholder="Seu email">
+
+        <input type="password" id="loginSenha" placeholder="Sua senha">
+
+        <button onclick="login()">
+            Entrar
+        </button>
+
+        <div class="erro" id="erroLogin"></div>
+
+        <div class="trocar-tela">
+            Não possui conta?
+            <span onclick="mostrarCadastro()">
+                Criar conta
+            </span>
+        </div>
+
+    </div>
+
+    <!-- CADASTRO -->
+    <div class="auth-box" id="cadastroBox" style="display:none;">
+
+        <h2>Criar Conta</h2>
+
+        <input type="text" id="cadastroNome" placeholder="Seu nome">
+
+        <input type="email" id="cadastroEmail" placeholder="Seu email">
+
+        <input type="password" id="cadastroSenha" placeholder="Sua senha">
+
+        <button onclick="cadastrar()">
+            Cadastrar
+        </button>
+
+        <div class="erro" id="erroCadastro"></div>
+
+        <div class="trocar-tela">
+            Já possui conta?
+            <span onclick="mostrarLogin()">
+                Fazer login
+            </span>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- SISTEMA -->
+
+<div id="sistema" style="display:none;">
+
+<div class="container">
+
+    <div class="logout">
+        <button onclick="logout()">
+            Sair
+        </button>
+    </div>
+
+    <div class="logo">
+        <h1>SALDO GARANTIDO</h1>
+        <p>Controle mensal financeiro pessoal inteligente</p>
     </div>
 
     <div class="cards">
@@ -349,12 +474,125 @@ button{
 
 </div>
 
+</div>
+
 <script>
 
 let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
 let editando = null;
 
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+// LOGIN
+
+function mostrarCadastro(){
+
+    document.getElementById("loginBox").style.display = "none";
+
+    document.getElementById("cadastroBox").style.display = "flex";
+}
+
+function mostrarLogin(){
+
+    document.getElementById("cadastroBox").style.display = "none";
+
+    document.getElementById("loginBox").style.display = "flex";
+}
+
+function cadastrar(){
+
+    const nome = document.getElementById("cadastroNome").value.trim();
+
+    const email = document.getElementById("cadastroEmail").value.trim();
+
+    const senha = document.getElementById("cadastroSenha").value.trim();
+
+    const erro = document.getElementById("erroCadastro");
+
+    erro.innerText = "";
+
+    if(nome === "" || email === "" || senha === ""){
+
+        erro.innerText = "Preencha todos os campos.";
+
+        return;
+    }
+
+    const existe = usuarios.find(u => u.email === email);
+
+    if(existe){
+
+        erro.innerText = "Este email já está cadastrado.";
+
+        return;
+    }
+
+    usuarios.push({
+        nome,
+        email,
+        senha
+    });
+
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+    alert("Conta criada com sucesso!");
+
+    mostrarLogin();
+}
+
+function login(){
+
+    const email = document.getElementById("loginEmail").value.trim();
+
+    const senha = document.getElementById("loginSenha").value.trim();
+
+    const erro = document.getElementById("erroLogin");
+
+    erro.innerText = "";
+
+    const usuario = usuarios.find(
+        u => u.email === email && u.senha === senha
+    );
+
+    if(!usuario){
+
+        erro.innerText = "Email ou senha inválidos.";
+
+        return;
+    }
+
+    localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+
+    abrirSistema();
+}
+
+function abrirSistema(){
+
+    document.getElementById("authContainer").style.display = "none";
+
+    document.getElementById("sistema").style.display = "block";
+
+    renderizar();
+}
+
+function logout(){
+
+    localStorage.removeItem("usuarioLogado");
+
+    location.reload();
+}
+
+const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+
+if(usuarioLogado){
+
+    abrirSistema();
+}
+
+// SISTEMA
+
 function formatar(valor){
+
     return valor.toLocaleString("pt-BR",{
         style:"currency",
         currency:"BRL"
@@ -362,21 +600,29 @@ function formatar(valor){
 }
 
 function salvarLocal(){
+
     localStorage.setItem("transacoes", JSON.stringify(transacoes));
 }
 
 function limparCampos(){
+
     document.getElementById("descricao").value = "";
+
     document.getElementById("valor").value = "";
+
     document.getElementById("data").value = "";
+
     document.getElementById("tipo").value = "Receita";
 }
 
 function salvarTransacao(){
 
     const descricao = document.getElementById("descricao").value.trim();
+
     const valor = parseFloat(document.getElementById("valor").value);
+
     const data = document.getElementById("data").value;
+
     const tipo = document.getElementById("tipo").value;
 
     const erro = document.getElementById("erro");
@@ -384,17 +630,23 @@ function salvarTransacao(){
     erro.innerText = "";
 
     if(descricao === ""){
+
         erro.innerText = "Digite uma descrição.";
+
         return;
     }
 
     if(!valor || valor <= 0){
+
         erro.innerText = "Digite um valor válido.";
+
         return;
     }
 
     if(data === ""){
+
         erro.innerText = "Selecione uma data.";
+
         return;
     }
 
@@ -407,15 +659,22 @@ function salvarTransacao(){
     };
 
     if(editando){
+
         const index = transacoes.findIndex(t => t.id === editando);
+
         transacoes[index] = transacao;
+
         editando = null;
+
     } else {
+
         transacoes.push(transacao);
     }
 
     salvarLocal();
+
     limparCampos();
+
     renderizar();
 }
 
@@ -424,8 +683,11 @@ function editar(id){
     const t = transacoes.find(x => x.id === id);
 
     document.getElementById("descricao").value = t.descricao;
+
     document.getElementById("valor").value = t.valor;
+
     document.getElementById("data").value = t.data;
+
     document.getElementById("tipo").value = t.tipo;
 
     editando = id;
@@ -436,30 +698,40 @@ function excluir(id){
     transacoes = transacoes.filter(t => t.id !== id);
 
     salvarLocal();
+
     renderizar();
 }
 
 function renderizar(){
 
     const listaReceitas = document.getElementById("listaReceitas");
+
     const listaDespesas = document.getElementById("listaDespesas");
 
     listaReceitas.innerHTML = "";
+
     listaDespesas.innerHTML = "";
 
     let renda = 0;
+
     let gastos = 0;
+
     let gastosMes = 0;
 
     const hoje = new Date();
+
     const mesAtual = hoje.getMonth();
+
     const anoAtual = hoje.getFullYear();
 
     transacoes.forEach(t => {
 
         if(t.tipo === "Receita"){
+
             renda += t.valor;
+
         } else {
+
             gastos += t.valor;
 
             const dataTransacao = new Date(t.data);
@@ -504,14 +776,18 @@ function renderizar(){
         `;
 
         if(t.tipo === "Receita"){
+
             listaReceitas.innerHTML += html;
+
         } else {
+
             listaDespesas.innerHTML += html;
         }
 
     });
 
     if(listaReceitas.innerHTML === ""){
+
         listaReceitas.innerHTML = `
             <div class="vazio">
                 Nenhuma receita cadastrada.
@@ -520,6 +796,7 @@ function renderizar(){
     }
 
     if(listaDespesas.innerHTML === ""){
+
         listaDespesas.innerHTML = `
             <div class="vazio">
                 Nenhuma despesa cadastrada.
@@ -530,8 +807,11 @@ function renderizar(){
     const saldo = renda - gastos;
 
     document.getElementById("rendaTotal").innerText = formatar(renda);
+
     document.getElementById("gastoTotal").innerText = formatar(gastos);
+
     document.getElementById("saldoFinal").innerText = formatar(saldo);
+
     document.getElementById("gastoMes").innerText = formatar(gastosMes);
 
     atualizarGrafico(renda, gastos);
@@ -544,25 +824,36 @@ function atualizarGrafico(receitas, despesas){
     const ctx = document.getElementById("grafico");
 
     if(grafico){
+
         grafico.destroy();
     }
 
     grafico = new Chart(ctx, {
+
         type:"bar",
+
         data:{
+
             labels:["Receitas", "Despesas"],
+
             datasets:[{
+
                 label:"Valores",
+
                 data:[receitas, despesas],
+
                 backgroundColor:[
                     "#16a34a",
                     "#dc2626"
                 ],
+
                 borderRadius:8
             }]
         },
+
         options:{
             responsive:true,
+
             plugins:{
                 legend:{
                     display:false
