@@ -6,7 +6,6 @@ Funcionalidades
 - Cadastro de receitas
 - Cadastro de despesas
 - Dashboard financeiro
-- Controle de gastos mensais
 - Gráficos automáticos
 - Edição e exclusão de transações
 
